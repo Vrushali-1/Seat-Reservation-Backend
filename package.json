@@ -1,0 +1,22 @@
+{
+  "name": "seat-reservation-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vrushali-1/Seat-Reservation-Backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vrushali-1/Seat-Reservation-Backend/issues"
+  },
+  "homepage": "https://github.com/Vrushali-1/Seat-Reservation-Backend#readme",
+  "dependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
