@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Vrushali-1/Seat-Reservation-Backend#readme",
   "dependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "pg": "^8.10.0",
+    "sequelize": "^6.30.0"
   }
 }
