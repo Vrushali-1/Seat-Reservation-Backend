@@ -65,6 +65,33 @@ exports.getUser = (req,res) => {
       });
 };
 
+exports.login = (req,res) => {
+
+  User.findOne({email:req.body.email})
+        .exec()
+        .then( result => {
+          if(result.password == req.body.password){
+            res.status(200).json({
+              message:'Successfully Logged In!',
+              user:{
+                user_id: result.user_id,
+                name:result.name,
+                email:result.email
+              }
+            });
+          }else{
+            res.status(500).json({
+              message:'Login Failed',
+            });
+          } 
+        })
+        .catch(err => {
+          res.status(500).json({
+             error:err
+        });
+    });
+};
+
 exports.removeUser = (req,res) => {
     User.deleteOne({user_id:req.body.user_id})
         .exec()

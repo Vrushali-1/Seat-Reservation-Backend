@@ -1,11 +1,23 @@
 const Counter = require('./models/counter');
 
-const initSequence = () => {
-  // Create a new document to initialize the sequence
-  const sequenceDoc = new Counter({ _id: 'userId' });
+async function initSequence() {
+  try {
+    const sequenceDocument = await Counter.findById('userId');
+    if (sequenceDocument) {
+      console.log('Sequence already exists');
+      return;
+    }
 
-  // Save the document to the database
-  sequenceDoc.save();
+    const newSequenceDocument = new Counter({
+      _id: 'userId',
+      sequence_value: 0
+    });
+
+    await newSequenceDocument.save();
+    console.log('Sequence initialized');
+  } catch (error) {
+    console.error('Error initializing sequence:', error);
+  }
 }
 
 module.exports = initSequence;
