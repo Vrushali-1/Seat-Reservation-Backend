@@ -19,9 +19,6 @@ const Bus = sequelize.define('Bus', {
         type: DataTypes.DATE,
         allowNull: false
     },
-    travel_time: {
-        type: DataTypes.TIME,
-    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false
