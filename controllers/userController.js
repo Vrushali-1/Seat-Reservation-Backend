@@ -26,7 +26,7 @@ exports.addUser=(req,res)=>{
                                   res.status(501).send({
                                   error:err,
                                  });
-                               });;
+                               });
                        })
                        .catch( err => {
                           res.status(501).send({

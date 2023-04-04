@@ -6,7 +6,7 @@ const Seat = require('../models/seat');
 
 
 const Booking = sequelize.define('Booking', {
-    bus_id: {
+    booking_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true

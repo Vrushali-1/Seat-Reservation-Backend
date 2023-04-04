@@ -9,6 +9,7 @@ const bus_seat = require('./models/bus-seat');
 const express = require('express');
 const userRoutes = require('./routes/userRoutes');
 const busRoutes = require('./routes/busRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 const app = express();
 const mongoose = require('./nosqldatabase');
 
@@ -18,6 +19,7 @@ const port = 3000;
 app.use(express.json());
 app.use('/',userRoutes);
 app.use('/',busRoutes);
+app.use('/',bookingRoutes);
 
 sequelize.sync({alter:true})
 
