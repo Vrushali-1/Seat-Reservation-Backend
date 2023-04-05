@@ -12,10 +12,12 @@ const busRoutes = require('./routes/busRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const app = express();
 const mongoose = require('./nosqldatabase');
+const cors = require('cors');
 
 const hostname = 'localhost';
-const port = 3000;
+const port = 8000;
 
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 app.use('/',userRoutes);
 app.use('/',busRoutes);
