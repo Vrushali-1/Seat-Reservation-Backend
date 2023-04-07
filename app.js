@@ -29,8 +29,13 @@ app.use('/',bookingRoutes);
 
 sequelize.sync({alter:true})
 
+app.get("/", (req,res)=> {
+  res.send("Hello there! Bus api is working")
+})
+
+
 app.listen(port, hostname, () => {
   console.log(`The Server running at http://${hostname}:${port}/`);
-});
+}); 
 
 
