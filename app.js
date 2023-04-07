@@ -15,7 +15,7 @@ const app = express();
 const mongoose = require('./nosqldatabase');
 const cors = require('cors');
 
-const hostname = 'localhost';
+//const hostname = 'localhost';
 const port = process.env.PORT || 8000;
 
 app.use(function(req, res, next) {
@@ -34,8 +34,8 @@ app.get("/", (req,res)=> {
 })
 
 
-app.listen(port, hostname, () => {
-  console.log(`The Server running at http://${hostname}:${port}/`);
+app.listen(port, () => {
+  console.log(`Sever is running port ${port} ...`);
 }); 
 
 
