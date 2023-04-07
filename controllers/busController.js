@@ -55,10 +55,12 @@ exports.getBus = (req,res) => {
 
 exports.getBuses = async (req,res) => {
     try {
+        console.log('inside try');
         const buses = await Bus.findAll();
+        console.log('buses',buses),buses;
         res.status(200).json(buses);
       } catch (error) {
-        console.error(error);
+        console.error('inside error',error);
         res.status(500).json({ message: 'Error retrieving buses' });
       }
 }
