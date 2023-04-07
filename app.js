@@ -26,7 +26,7 @@ app.use('/',bookingRoutes);
 sequelize.sync({alter:true})
 
 app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+  console.log(`The Server running at http://${hostname}:${port}/`);
 });
 
 
