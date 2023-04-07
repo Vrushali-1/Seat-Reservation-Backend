@@ -12,7 +12,9 @@ const sequelize = new Sequelize(
 );
 
 (async () => {
+	console.log('inside the postgres sql connection database');
 	try {
+		console.log('inside the try block');
 	  await sequelize.authenticate();
 	  console.log('Connection has been established successfully.');
 	} catch (error) {
