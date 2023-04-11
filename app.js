@@ -18,10 +18,7 @@ const cors = require('cors');
 //const hostname = 'localhost';
 const port = process.env.PORT || 8000;
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
-});
+app.use(cors());
 app.use(express.json());
 app.use('/',userRoutes);
 app.use('/',busRoutes);
