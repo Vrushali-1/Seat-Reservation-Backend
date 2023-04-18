@@ -3,11 +3,11 @@ var pg = require('pg');
 pg.defaults.ssl = true;
 
 const sequelize = new Sequelize(
-	'seat reservation',
-	'Vrushali',
-	'UMBC@12345678', {
+	'seatreservation',
+	'seatreservation',
+	'xD6o35DzPnfIAEnmdR8srDmgeGQe0psR', {
 		dialect: 'postgres',	
-		host: 'seat-reservation.postgres.database.azure.com'
+		host: 'dpg-cgu9qaqut4mcfrhfn1gg-a.oregon-postgres.render.com'
 	}
 );
 
