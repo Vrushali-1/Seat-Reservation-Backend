@@ -3,7 +3,7 @@ const sequelize = require('../sqldatabase');
 
 const Bus = sequelize.define('Bus', {
     bus_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER, 
         primaryKey: true,
         autoIncrement: true
     },

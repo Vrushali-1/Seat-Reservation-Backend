@@ -1,6 +1,42 @@
 const { SchemaTypes } = require('mongoose');
 const Bus_Seat = require('../models/bus-seat');
 const Booking = require('../models/booking');
+
+exports.getBookingsByUser = async (req,res) => {
+  try {
+    const bookings = await Booking.findAll({
+      where: { student_id:req.body.student_id },
+    });
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving bookings' });
+  }
+}
+
+exports.getBookingsById = async (req,res) => {
+  try {
+    const booking = await Booking.findOne({
+      where: { booking_id:req.body.booking_id },
+    });
+    res.status(200).json(booking);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving booking' });
+  }
+}
+
+exports.deleteBooking = async (req,res) => {
+    Booking.findOne({where: { booking_id: req.body.booking_id}})
+      .then(async booking => {
+        await Bus_Seat.destroy({ where: { booking_id: booking.booking_id } });
+        await Booking.destroy({ where: {booking_id:booking.booking_id}})
+        res.status(200).json({message: 'Booking Deleted'});
+      })
+      .catch (error => {
+        res.status(500).json({ message: 'Error retrieving booking' });
+     })
+
+}
+
 exports.seatBooking = async (req,res) => {
     const seats = req.body.seats;
     getSeatAvailability(seats,req.body.bus_id)
@@ -16,7 +52,7 @@ exports.seatBooking = async (req,res) => {
                 .then(() => {
                     res.status(201).send({
                         message:"Booking Done!",
-                        user:result
+                        booking:result
                     });
                 })
                 .catch((error) => {
@@ -39,6 +75,26 @@ exports.seatBooking = async (req,res) => {
         console.log(error);
         // Handle the error
     });;
+}
+
+exports.updateBooking = async (req,res) => {
+  Booking.findOne({where: { booking_id: req.body.booking_id}})
+      .then(async booking => {
+        await Bus_Seat.destroy({ where: { booking_id: booking.booking_id } });
+        addBusSeats(booking.booking_id,booking.bus_id,req.body.seats,req.body.email)
+          .then(() => {
+                    res.status(201).send({
+                        message:"Booking Updated!"
+                    });
+          })
+          .catch((error) => {
+                    console.error('Error adding seats:', error);
+                    // handle error
+          });
+      })
+      .catch (error => {
+        res.status(500).json({ message: 'Error retrieving booking' });
+      })
 }
 
 function getSeatAvailability(seats, bus_id) {
