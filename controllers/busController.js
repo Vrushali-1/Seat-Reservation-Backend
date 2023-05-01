@@ -3,6 +3,7 @@ const Bus_Seat = require('../models/bus-seat');
 const Seat = require('../models/seat');
 
 
+
 exports.addBus = (req,res) => {
     Bus.findOne({where:{bus_id:req.body.bus_id}}) 
     .then( async bus => {
@@ -35,10 +36,12 @@ exports.addBus = (req,res) => {
 };
 
 exports.getBus = (req,res) => {
-
     Bus.findOne({where:{destination:req.body.destination, departure:req.body.departure}})
         .then( async result => {
-            if(new Date(result.travel_date).toISOString().split('T')[0] == req.body.travel_date){
+            const curDate = new Date(result.travel_date).toISOString().split('T')[0];
+            const newDate = new Date(req.body.travel_date).toISOString().split('T')[0];
+            console.log('curDate',curDate,' newDate', newDate, ' condition ', curDate, newDate);
+            if(curDate == newDate){
                 const bookedSeats = await getBookedSeats(result.bus_id);
                 res.status(200).json({
                     message:'Found',
@@ -67,6 +70,30 @@ exports.getBuses = async (req,res) => {
       } catch (error) {
         res.status(500).json({ message: 'Error retrieving buses' });
       }
+}
+
+exports.getBusById = (req,res) => {
+    Bus.findOne({where:{bus_id:req.body.bus_id}})
+    .then( async result => {
+        if(result){
+            const bookedSeats = await getBookedSeats(result.bus_id);
+            res.status(200).json({
+                message:'Found',
+                bus:result,
+                bookedSeats: bookedSeats
+            });
+        }
+        else{
+            res.status(500).json({
+                message:'Not Found',
+            });
+        }  
+    })
+    .catch(err => {
+        res.status(500).json({
+            error:err
+        });
+    });
 }
 
 exports.getSeats = async (req,res) => {
