@@ -6,7 +6,7 @@ const { Sequelize } = require('sequelize');
 exports.getBookingsByUser = async (req,res) => {
   let final = [];
   let count = 0;
-  const query = `SELECT bk.booking_id, bs.destination, bs.departure, bk."createdAt"
+  const query = `SELECT bk.booking_id, bs.destination, bs.travel_date, bs.departure, bk."createdAt"
   FROM public."Buses" bs, public."Bookings" bk
   WHERE bk.bus_id = bs.bus_id AND bk.student_id = ${req.body.student_id}`;
   const bookings = await sequelize.query(query, {
