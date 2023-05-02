@@ -1,13 +1,30 @@
-const { SchemaTypes } = require('mongoose');
+const sequelize = require('../sqldatabase');
 const Bus_Seat = require('../models/bus-seat');
 const Booking = require('../models/booking');
+const { Sequelize } = require('sequelize');
 
 exports.getBookingsByUser = async (req,res) => {
+  let final = [];
+  let count = 0;
+  const query = `SELECT bk.booking_id, bs.destination, bs.departure, bk."createdAt"
+  FROM public."Buses" bs, public."Bookings" bk
+  WHERE bk.bus_id = bs.bus_id AND bk.student_id = ${req.body.student_id}`;
+  const bookings = await sequelize.query(query, {
+    type: Sequelize.QueryTypes.SELECT // Specify the type of query to execute
+  });
   try {
-    const bookings = await Booking.findAll({
-      where: { student_id:req.body.student_id },
-    });
-    res.status(200).json(bookings);
+    for(const booking of bookings){
+      const seats = await getBookedSeats(booking.booking_id);
+      bookingObj = {
+        ...booking,
+        seats:seats
+      }
+      final.push(bookingObj);
+      count++;
+    }
+    if(bookings.length === count){
+      res.status(200).json(final);
+    }  
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving bookings' });
   }
@@ -131,4 +148,20 @@ function addBusSeats(booking_id, bus_id, seats, email) {
       );
     }
     return Promise.all(promises);
+}
+
+function getBookedSeats(booking_id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const query = `SELECT s.seat_name,s.seat_id
+      FROM public."Bus_Seats" bs, public."Seats" s
+      WHERE s.seat_id=bs.seat_id AND bs.booking_id = ${booking_id}`;
+      const results = await sequelize.query(query, {
+        type: Sequelize.QueryTypes.SELECT // Specify the type of query to execute
+      });
+      resolve(results);
+    } catch (error) {
+      reject(error);
+    }
+  });
 }
