@@ -1,6 +1,7 @@
 const Bus = require('../models/bus');
-const Bus_Seat = require('../models/bus-seat');
 const Seat = require('../models/seat');
+const { Sequelize } = require('sequelize');
+const sequelize = require('../sqldatabase');
 
 
 
@@ -120,10 +121,14 @@ exports.deleteBus = async (req,res) => {
 }
 
 function getBookedSeats(bus_id) {
+
     return new Promise(async (resolve, reject) => {
       try {
-        const bookedSeats = await Bus_Seat.findAll({
-          where: { bus_id:bus_id },
+        const query = `SELECT bs.bus_id, bs.seat_id, bs.booking_id, bk.student_id
+        FROM public."Bus_Seats" bs, public."Bookings" bk
+        WHERE bk.booking_id = bs.booking_id AND bs.bus_id = ${bus_id}`;
+        const bookedSeats = await sequelize.query(query, {
+          type: Sequelize.QueryTypes.SELECT // Specify the type of query to execute
         });
         resolve(bookedSeats);
       } catch (error) {
