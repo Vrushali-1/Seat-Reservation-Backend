@@ -29,5 +29,13 @@ const Bus = sequelize.define('Bus', {
     }
 });
 
+// Define a beforeCreate hook to generate the bus_id value dynamically
+Bus.beforeCreate((bus, options) => {
+    return Bus.max('bus_id').then(maxId => {
+        bus.bus_id = (maxId || 0) + 1;
+        return bus;
+    });
+});
+
 module.exports = Bus;
   

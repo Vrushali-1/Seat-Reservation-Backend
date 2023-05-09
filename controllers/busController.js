@@ -6,13 +6,10 @@ const sequelize = require('../sqldatabase');
 
 
 exports.addBus = (req,res) => {
-    Bus.findOne({where:{bus_id:req.body.bus_id}}) 
-    .then( async bus => {
-      if(!bus){
-          Bus.create({
+        Bus.create({
             departure:req.body.departure,
             destination:req.body.destination,
-            travel_date:req.body.travel_date,
+            travel_date:new Date(req.body.travel_date),
             createdAt: new Date(),
             createdBy: req.body.email
         })
@@ -27,13 +24,7 @@ exports.addBus = (req,res) => {
             error:err,
                 message:"Missing Parameters"
             });
-        });
-      }else{
-          res.status(500).json({
-               message:"Bus exists!"
-          })
-      }   
-    })
+        }); 
 };
 
 exports.getBus = (req,res) => {
