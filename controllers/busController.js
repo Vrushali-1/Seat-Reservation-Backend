@@ -27,31 +27,36 @@ exports.addBus = (req,res) => {
         }); 
 };
 
-exports.getBus = (req,res) => {
-    Bus.findOne({where:{destination:req.body.destination, departure:req.body.departure}})
-        .then( async result => {
-            const curDate = new Date(result.travel_date).toISOString().split('T')[0];
-            const newDate = new Date(req.body.travel_date).toISOString().split('T')[0];
-            console.log('curDate',curDate,' newDate', newDate, ' condition ', curDate, newDate);
-            if(curDate == newDate){
-                const bookedSeats = await getBookedSeats(result.bus_id);
-                res.status(200).json({
-                    message:'Found',
-                    bus:result,
-                    bookedSeats: bookedSeats
-                });
-            }
-            else{
-                res.status(500).json({
-                    message:'Not Found',
-                });
-            }  
-        })
-        .catch(err => {
-            res.status(500).json({
-                error:err
-            });
+exports.getBus =  async (req,res) => {
+    try {
+        const buses = await Bus.findAll({
+          where: { destination: req.body.destination, departure: req.body.departure }
         });
+        
+        for (const bus of buses) {
+          const curDate = new Date(bus.travel_date).toISOString().split('T')[0];
+          const newDate = new Date(req.body.travel_date).toISOString().split('T')[0];
+          console.log('curDate', curDate, ' newDate', newDate, ' condition ', curDate, newDate);
+    
+          if (curDate === newDate) {
+            const bookedSeats = await getBookedSeats(bus.bus_id);
+    
+            return res.status(200).json({
+              message: 'Found',
+              bus: bus,
+              bookedSeats: bookedSeats
+            });
+          }
+        }
+    
+        return res.status(500).json({
+          message: 'Not Found'
+        });
+      } catch (err) {
+        return res.status(500).json({
+          error: err
+        });
+      }    
 }
 
 exports.getBuses = async (req,res) => {
