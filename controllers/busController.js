@@ -28,6 +28,9 @@ exports.addBus = (req,res) => {
 };
 
 exports.getBus =  async (req,res) => {
+    let emptyBus;
+    let isBooked = false;
+    let bookedSeats = [];
     try {
         const buses = await Bus.findAll({
           where: { destination: req.body.destination, departure: req.body.departure }
@@ -39,19 +42,30 @@ exports.getBus =  async (req,res) => {
           console.log('curDate', curDate, ' newDate', newDate, ' condition ', curDate, newDate);
     
           if (curDate === newDate) {
-            const bookedSeats = await getBookedSeats(bus.bus_id);
-    
-            return res.status(200).json({
-              message: 'Found',
-              bus: bus,
-              bookedSeats: bookedSeats
-            });
+            bookedSeats = await getBookedSeats(bus.bus_id);
+            if(bookedSeats.length === 20){
+              isBooked = true;
+            }
+            else{
+              emptyBus = bus;
+            }
           }
         }
-    
-        return res.status(500).json({
-          message: 'Not Found'
-        });
+        if(emptyBus){
+          return res.status(200).json({
+            message: 'Found',
+            bus: emptyBus,
+            bookedSeats: bookedSeats
+          });
+        }else if(isBooked && !emptyBus){
+          return res.status(200).json({
+            message: 'All seats booked! Please, request new bus.',
+          });
+        }else {
+          return res.status(200).json({
+            message: 'Not Found'
+          });
+        }
       } catch (err) {
         return res.status(500).json({
           error: err
